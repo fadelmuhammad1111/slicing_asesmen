@@ -1,4 +1,8 @@
 import 'package:belajarwidget/belajar_listview.dart';
+import 'package:belajarwidget/bottom_navbar.dart';
+import 'package:belajarwidget/day1.dart';
+import 'package:belajarwidget/drawer.dart';
+import 'package:belajarwidget/setting.dart';
 import 'package:belajarwidget/slicing_asesmen.dart';
 import 'package:flutter/material.dart';
 
@@ -11,10 +15,17 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "BelajarListview",
-      home: SlicingAsesmen(),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => BottomNavbar(),
+        "/kasir": (context) => BelajarListView(),
+        "/camera": (context) => Day1(),
+        "/dashboard": (context) => SlicingAsesmen(),
+        "/setting": (context) => SettingPage(),
+      },
     );
   }
 }

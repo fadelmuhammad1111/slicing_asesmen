@@ -42,6 +42,25 @@ class _BelajarListViewState extends State<BelajarListView> {
   int totalItem = 0;
   int totalHarga = 0;
 
+  //tambah item keranjang
+  Future <void> TambahItemKeranjang (int index) async {
+    setState(() {
+      products[index]['stock']--;
+      products[index]['quantity'] ++;
+      totalItem++;
+      totalHarga += products[index]['price'] as int;
+    });
+  }
+
+  Future <void> KurangItemKeranjang (int index) async {
+    setState(() {
+      products[index]['stock']++;
+      products[index]['quantity'] --;
+      totalItem--;
+      totalHarga -= products[index]['price'] as int;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,27 +168,49 @@ class _BelajarListViewState extends State<BelajarListView> {
                               Spacer(),
                               Row(
                                 children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.remove_circle_outline,
-                                      color: Colors.red,
+                                  Visibility(
+                                    visible: products[index]['quantity'] > 0,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        if (products[index]['quantity'] > 0) {
+                                          KurangItemKeranjang(index);
+                                        }
+                                      },
+                                      icon: Icon(
+                                        Icons.remove_circle_outline,
+                                        color: Colors.red,
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
                                     width: 40,
                                     child: Center(
-                                      child: Text(
-                                        "${products[index]['quantity']}",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
+                                      child: Visibility(
+                                        visible: products[index]['quantity'] > 0,
+                                        child: Text(
+                                          "${products[index]['quantity']}",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      if (products [index]['stock'] > 0) {
+                                        TambahItemKeranjang(index);
+                                      } else{
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(content: Text("Stock Habis!"),
+                                          backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      }
+                                    },
                                     icon: Icon(
                                       Icons.add_circle_outline_sharp,
                                       color: Colors.green,
@@ -202,7 +243,7 @@ class _BelajarListViewState extends State<BelajarListView> {
                 child: Row(
                   children: [
                     Text(
-                      "Total (8 item) = Rp. 12000",
+                      "Total ($totalItem item) = Rp. $totalHarga",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
